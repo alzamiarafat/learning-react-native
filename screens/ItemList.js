@@ -1,28 +1,58 @@
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, ScrollView, Platform, TouchableWithoutFeedback, Button, Keyboard } from 'react-native';
 import FeIcon from 'react-native-vector-icons/Feather';
+import FaIcon from 'react-native-vector-icons/FontAwesome';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import tailwind from 'tailwind-react-native-classnames';
+import style from 'tailwind-react-native-classnames';
 
 export function ItemList() {
 
+    const [item, setItem] = useState();
+    const [itemList, setItemList] = useState([]);
+
+    const handleAddItem = () => {
+        setItemList([...itemList, item])
+        console.log(itemList)
+        setItem('');
+    }
+    const handleRemoveItem = (index) => {
+        let itemCopy = [...itemList];
+        itemCopy.splice(index, 1)
+        setItemList(itemCopy)
+    }
+
     return (
-        <View >
-            <View style={[tailwind`bg-white p-5 m-5 mb-0`, styles.shadowProp]}>
-                <Text style={tailwind`text-gray-500`}>This is item 1<FeIcon name="edit-2" size={20} color="#900" /></Text>
+        <View>
+            <View style={style`flex flex-row p-5`}>
+                <KeyboardAvoidingView>
+                    <TextInput style={style`w-72 text-black border border-gray-300 rounded p-2`} placeholder="Enter Text.." value={item} onChangeText={text => { setItem(text) }} />
+                </KeyboardAvoidingView>
+                {/* <Button title="Learn More"></Button> */}
+                <TouchableOpacity onPress={handleAddItem}>
+                    <Text style={style`border border-gray-300 p-3 ml-5 rounded bg-blue-300`} >
+                        {/* <ActivityIndicator size="small" color='#0000ff' /> */}
+                        <AntIcon name="plus" size={20} color="#000" />
+                    </Text>
+                </TouchableOpacity>
             </View>
-            <View style={[tailwind`bg-white p-5 m-5 mb-0`, styles.shadowProp]}>
-                <Text style={tailwind`text-gray-500`}>This is item 2</Text>
-            </View>
-            <View style={[tailwind`bg-white p-5 m-5 mb-0`, styles.shadowProp]}>
-                <Text style={tailwind`text-gray-500`}>This is item 3</Text>
-            </View>
-            <View style={[tailwind`bg-white p-5 m-5 mb-0`, styles.shadowProp]}>
-                <Text style={tailwind`text-gray-500`}>This is item 4</Text>
-            </View>
-            <View style={tailwind`flex flex-row`}>
-                <TextInput style={tailwind`w-72 text-black border border-gray-300 p-2 m-5 rounded`} placeholder="Enter Text.." />
-                <Text style={tailwind`border border-gray-300 rounded-full p-3`}><AntIcon name="plus" size={20} color="#000" /></Text>
-            </View>
+            <ScrollView>
+                {
+                    itemList.map((item, index) => {
+                        return (
+
+                            <View style={[style`bg-white p-5 m-5 mb-0 flex flex-row`, styles.shadowProp]} key={index}>
+                                <Text style={style`text-gray-500 w-64 p-2`}>{item}</Text>
+                                <Text style={style`border border-gray-300 p-2`}>
+                                    <FeIcon name="edit-2" size={20} style={style`text-green-600`} />
+                                </Text>
+                                <TouchableOpacity onPress={() => handleRemoveItem(index)} style={style`border border-gray-300 p-2 ml-3`}>
+                                    <FaIcon name="trash-o" size={20} style={style`text-red-500`} />
+                                </TouchableOpacity>
+                            </View>
+                        )
+                    })
+                }
+            </ScrollView>
         </View >
     );
 }

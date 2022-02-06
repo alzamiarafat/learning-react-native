@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
   },
   bodySection: {
     marginTop: 20,
+    height: 700
   },
   title: {
     fontSize: 20,
