@@ -9,16 +9,27 @@ export function ItemList() {
 
     const [item, setItem] = useState();
     const [itemList, setItemList] = useState([]);
+    const [store, setStore] = useState([]);
 
     const handleAddItem = () => {
         setItemList([...itemList, item])
         console.log(itemList)
         setItem('');
     }
+
     const handleRemoveItem = (index) => {
         let itemCopy = [...itemList];
         itemCopy.splice(index, 1)
         setItemList(itemCopy)
+    }
+
+    const testApi = () => {
+        fetch('https://jsonplaceholder.typicode.com/todos')
+            .then(response => response.json())
+            .then(json => {
+                setStore(json)
+                console.log(store)
+            })
     }
 
     return (
@@ -35,6 +46,23 @@ export function ItemList() {
                     </Text>
                 </TouchableOpacity>
             </View>
+            <TouchableOpacity onPress={testApi}>
+                <Text style={style`border border-gray-300 p-3 m-3 rounded bg-blue-300`} >
+                    {/* <ActivityIndicator size="small" color='#0000ff' /> */}
+                    {/* <AntIcon name="plus" size={20} color="#000" /> */}
+                    Test
+                </Text>
+            </TouchableOpacity>
+            <ScrollView>
+                {store.map((s, i) => {
+                    return (
+                        <View key={i} style={style`border border-gray-400 rounded m-3 p-4`}>
+                            <Text>{s.id}</Text>
+                            <Text>{s.title}</Text>
+                        </View>
+                    )
+                })}
+            </ScrollView>
             <ScrollView>
                 {
                     itemList.map((item, index) => {
