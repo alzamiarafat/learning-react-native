@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, ScrollView, Platform, TouchableWithoutFeedback, Button, Keyboard } from 'react-native';
 import FeIcon from 'react-native-vector-icons/Feather';
 import FaIcon from 'react-native-vector-icons/FontAwesome';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import style from 'tailwind-react-native-classnames';
 
-export function ItemList() {
+export function ItemList(props) {
 
     const [item, setItem] = useState();
     const [itemList, setItemList] = useState([]);
@@ -23,42 +24,65 @@ export function ItemList() {
         setItemList(itemCopy)
     }
 
-    const testApi = () => {
-        fetch('https://jsonplaceholder.typicode.com/todos')
-            .then(response => response.json())
-            .then(json => {
-                setStore(json)
-                console.log(store)
-            })
+    const getApi = () => {
+        axios.get('http://192.168.7.70:8000/api/test').then(response => {
+            setStore(response.data)
+        })
+    }
+    const searchApi = () => {
+        // console.log(item)
+        axios.get(`http://192.168.7.70:8000/api/search/${item}`).then(response => {
+            setStore(response.data)
+        })
+    }
+    const searchByNameApi = () => {
+        axios.get('http://192.168.7.70:8000/api/search-name').then(response => {
+            setStore(response.data)
+        })
+    }
+    const clearApi = () => {
+        setStore([])
     }
 
     return (
         <View>
             <View style={style`flex flex-row p-5`}>
                 <KeyboardAvoidingView>
-                    <TextInput style={style`w-72 text-black border border-gray-300 rounded p-2`} placeholder="Enter Text.." value={item} onChangeText={text => { setItem(text) }} />
+                    <TextInput style={style`w-72 text-black border border-gray-300 rounded p-2`} placeholder="Enter Text.." value={item} onChangeText={text => { setItem(text) }} onKeyPress={searchApi} />
                 </KeyboardAvoidingView>
                 {/* <Button title="Learn More"></Button> */}
-                <TouchableOpacity onPress={handleAddItem}>
+                <TouchableOpacity onPress={searchByNameApi}>
                     <Text style={style`border border-gray-300 p-3 ml-5 rounded bg-blue-300`} >
                         {/* <ActivityIndicator size="small" color='#0000ff' /> */}
-                        <AntIcon name="plus" size={20} color="#000" />
+                        <AntIcon name="search1" size={20} color="#000" />
                     </Text>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={testApi}>
-                <Text style={style`border border-gray-300 p-3 m-3 rounded bg-blue-300`} >
-                    {/* <ActivityIndicator size="small" color='#0000ff' /> */}
-                    {/* <AntIcon name="plus" size={20} color="#000" /> */}
-                    Test
-                </Text>
-            </TouchableOpacity>
+            <View style={style`flex flex-row`}>
+                <TouchableOpacity onPress={getApi}>
+                    <Text style={style`border border-gray-300 p-3 m-3 rounded bg-green-700 text-white`} >
+                        Get Data
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={clearApi}>
+                    <Text style={style`border border-gray-300 p-3 m-3 rounded bg-red-700 text-white`} >
+                        Clear Data
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => props.props.navigation.navigate('Friends')}>
+                    <Text style={style`border border-gray-300 p-3 m-3 rounded bg-yellow-600 text-white`} >
+                        + Add New
+                    </Text>
+                </TouchableOpacity>
+            </View>
+
             <ScrollView>
                 {store.map((s, i) => {
                     return (
                         <View key={i} style={style`border border-gray-400 rounded m-3 p-4`}>
-                            <Text>{s.id}</Text>
-                            <Text>{s.title}</Text>
+                            <Text>ID: {s.id}</Text>
+                            <Text>{s.name}</Text>
+                            <Text>{s.email}</Text>
                         </View>
                     )
                 })}

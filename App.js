@@ -9,6 +9,7 @@ import Friend from './screens/Friend';
 
 
 
+
 const Stack = createStackNavigator();
 
 export default function App() {
