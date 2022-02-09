@@ -25,18 +25,17 @@ export function ItemList(props) {
     }
 
     const getApi = () => {
-        axios.get('http://192.168.7.70:8000/api/test').then(response => {
+        axios.get('http://192.168.7.70:8000/api/users').then(response => {
             setStore(response.data)
         })
     }
     const searchApi = () => {
-        // console.log(item)
         axios.get(`http://192.168.7.70:8000/api/search/${item}`).then(response => {
             setStore(response.data)
         })
     }
     const searchByNameApi = () => {
-        axios.get('http://192.168.7.70:8000/api/search-name').then(response => {
+        axios.get(`http://192.168.7.70:8000/api/search-name/${item}`).then(response => {
             setStore(response.data)
         })
     }
