@@ -1,14 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { ItemList } from './screens/ItemList';
-import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Home } from './screens/Home';
 import Friend from './screens/Friend';
-
-
-
 
 const Stack = createStackNavigator();
 
